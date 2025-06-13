@@ -10,7 +10,7 @@ SECRET_KEY = 'django-insecure-jnj2m8i16u8#u_s9ub7hi@e$lqenb#^aun1)7g2_tymi+1-owq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Allow dynamic hostname from Render
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
