@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Laporan Integrasi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      padding: 20px;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tabs button {
+      background: #e0e0e0;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 5px;
+      border-radius: 5px;
+    }
+    .tabs button.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .tab-content.active {
+      display: block;
+    }
+    h2 {
+      color: #007bff;
+      margin-bottom: 15px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+    th {
+      background: #f9f9f9;
+      font-weight: bold;
+    }
+    a.btn, button.btn {
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-right: 5px;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    a.btn.edit {
+      background-color: #28a745;
+    }
+    button.btn.delete {
+      background-color: #dc3545;
+    }
+    a.btn:hover, button.btn:hover {
+      opacity: 0.85;
+    }
+    form.inline-form {
+      display: inline;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Laporan Manajemen Integrasi</h1>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="engineering">Engineering</button>
+    <button class="tab-btn" data-tab="dataset">Dataset</button>
+    <button class="tab-btn" data-tab="project">Project Model</button>
+    <button class="tab-btn" data-tab="final">Final Model</button>
+  </div>
+
+  <!-- Engineering Tab -->
+  <div class="tab-content active" id="engineering">
+    <h2>Data Engineering</h2>
+    <table>
+      <tr>
+        <th>Objectives</th>
+        <th>Experience</th>
+        <th>Implementation</th>
+        <th>Actions</th>
+      </tr>
+      {% for e in engineering %}
+      <tr>
+        <td>{{ e.objectives|truncatechars:40 }}</td>
+        <td>{{ e.experience|truncatechars:40 }}</td>
+        <td>{{ e.implementation|truncatechars:40 }}</td>
+        <td>
+          <a class="btn edit" href="{% url 'edit_engineering' e.id %}">Edit</a>
+
+          <form action="{% url 'delete_engineering' e.id %}" method="post" class="inline-form" onsubmit="return confirm('Yakin ingin hapus?');">
+            {% csrf_token %}
+            <button type="submit" class="btn delete">Delete</button>
+          </form>
+
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- Dataset Tab -->
+  <div class="tab-content" id="dataset">
+    <h2>Dataset Requests</h2>
+    <table>
+      <tr><th>Kebutuhan</th><th>Deskripsi</th><th>Actions</th></tr>
+      {% for req in dataset_requests %}
+      <tr>
+        <td>{{ req.kebutuhan }}</td>
+        <td>{{ req.deskripsi|truncatechars:60 }}</td>
+        <td>
+          <a class="btn edit" href="{% url 'edit_dataset' req.id %}">Edit</a>
+          <form action="{% url 'delete_dataset' req.id %}" method="post" class="inline-form" onsubmit="return confirm('Yakin ingin hapus?');">
+            {% csrf_token %}
+            <button type="submit" class="btn delete">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- Project Model Tab -->
+  <div class="tab-content" id="project">
+    <h2>Project Model</h2>
+    <table>
+      <tr><th>Nama Model</th><th>Deskripsi</th><th>Accuracy</th><th>Actions</th></tr>
+      {% for p in project_models %}
+      <tr>
+        <td>{{ p.nama_model }}</td>
+        <td>{{ p.deskripsi|truncatechars:60 }}</td>
+        <td>{{ p.accuracy }}%</td>
+        <td>
+          <a class="btn edit" href="{% url 'edit_project_model' p.id %}">Edit</a>
+          <form action="{% url 'delete_project_model' p.id %}" method="post" class="inline-form" onsubmit="return confirm('Yakin ingin hapus?');">
+            {% csrf_token %}
+            <button type="submit" class="btn delete">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- Final Model Tab -->
+  <div class="tab-content" id="final">
+    <h2>Final Model</h2>
+    <table>
+      <tr><th>Nama</th><th>Fitur</th><th>Evaluasi</th><th>Actions</th></tr>
+      {% for f in final_models %}
+      <tr>
+        <td>{{ f.nama }}</td>
+        <td>{{ f.fitur|truncatechars:60 }}</td>
+        <td>{{ f.evaluasi }}</td>
+        <td>
+          <a class="btn edit" href="{% url 'edit_final_model' f.id %}">Edit</a>
+          <form action="{% url 'delete_final_model' f.id %}" method="post" class="inline-form" onsubmit="return confirm('Yakin ingin hapus?');">
+            {% csrf_token %}
+            <button type="submit" class="btn delete">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
